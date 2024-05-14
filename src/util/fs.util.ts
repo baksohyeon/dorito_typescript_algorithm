@@ -3,7 +3,6 @@ import * as path from "path";
 import * as readline from "readline";
 
 const DATE = new Date();
-const TEMPLATE_NAME = "REVIEW_TEMPLATE.md";
 
 const formatDigit = (time: number) => {
   return time.toString().padStart(2, "0");
@@ -12,6 +11,10 @@ const formatDigit = (time: number) => {
 const TIMESTAMP = `${DATE.getFullYear()}-${formatDigit(
   DATE.getMonth() + 1
 )}-${formatDigit(DATE.getDate())}`;
+
+const DAY_TIMESTAMP = `daytime-${formatDigit(DATE.getHours())}:${formatDigit(
+  DATE.getMinutes()
+)}`;
 
 interface ICommand {
   question: string;
@@ -27,20 +30,20 @@ const PLATFORM_LIST = {
 const commands: ICommand[] = [
   {
     question:
-      "Press the letter of the platform (Programmers: p, LeetCode: l): ",
+      "\n Press the letter of the platform (Programmers: p, LeetCode: l): ",
     name: "platform",
     defaultValue: PLATFORM_LIST.Programmers,
   },
   {
-    // question: "Choose the directory to create the file: ",
-    question: "title: ",
+    question:
+      "\n Configure solution directory name\n \t recommand solution name: ",
     name: "destDir",
     defaultValue: TIMESTAMP,
   },
   {
-    question: "Template name (recommend: REVIEW_TEMPLATE.md): ",
+    question: "\n Configure file name to store",
     name: "destFile",
-    defaultValue: TEMPLATE_NAME,
+    defaultValue: "filename",
   },
 ];
 
@@ -61,7 +64,7 @@ const executeCommands = (index: number) => {
 
   const { question, name, defaultValue } = commands[index];
 
-  rl.question(`${question} (${defaultValue}): `, (answer) => {
+  rl.question(`${question} (default: ${defaultValue}): `, (answer) => {
     // 플랫폼이 leetcode programmers 인지 확인
     if (name === "platform") {
       if (
@@ -85,7 +88,7 @@ const executeCommands = (index: number) => {
   });
 };
 
-const processAnswers = (answers: { [key: string]: string }) => {
+const processAnswers = async (answers: { [key: string]: string }) => {
   const { platform, destDir, destFile } = answers;
   // 플랫폼, 문제이름, 파일이름
   const templatePath = path.resolve(
@@ -93,24 +96,25 @@ const processAnswers = (answers: { [key: string]: string }) => {
     "../../src/util/REVIEW_TEMPLATE.md"
   );
 
+  const solutionPath = path.resolve(__dirname, `../../src/app.ts`);
+
   const targetPath = path.resolve(
     __dirname,
     `../../solution/${platform}/${destDir}`
   );
 
-  const filePath = path.join(targetPath, destFile);
-  const fileName = destFile.split(".")[0];
-  const fileExtension = destFile.split(".")[1];
+  const [templateContent, solutionContent] = await Promise.all([
+    fs.promises.readFile(templatePath, "utf8"),
+    fs.promises.readFile(solutionPath, "utf8"),
+  ]);
 
-  const templateContent = fs.readFileSync(templatePath, "utf-8");
-  const destFilePath = path.join(targetPath, `${fileName}.${fileExtension}`);
-  console.log({ templatePath, targetPath, destFilePath });
+  console.log({ templatePath, targetPath });
 
   fs.mkdirSync(targetPath, { recursive: true });
-  // fs.writeFileSync(destFilePath, templateContent);
-  fs.writeFileSync(filePath, templateContent);
+  fs.writeFileSync(`${targetPath}/${destFile}.solution.ts`, solutionContent);
+  fs.writeFileSync(`${targetPath}/${destFile}.note.md`, templateContent);
 
-  console.log(`File created: ${destFilePath}`);
+  console.log("ok");
 };
 
 executeCommands(0);
