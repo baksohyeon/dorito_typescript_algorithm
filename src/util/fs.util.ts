@@ -12,7 +12,7 @@ const TIMESTAMP = `${DATE.getFullYear()}-${formatDigit(
   DATE.getMonth() + 1
 )}-${formatDigit(DATE.getDate())}`;
 
-const DAY_TIMESTAMP = `daytime-${formatDigit(DATE.getHours())}:${formatDigit(
+const DAY_TIMESTAMP = `${formatDigit(DATE.getHours())}:${formatDigit(
   DATE.getMinutes()
 )}`;
 
@@ -43,7 +43,7 @@ const commands: ICommand[] = [
   {
     question: "\n Configure file name to store",
     name: "destFile",
-    defaultValue: "filename",
+    defaultValue: `timestamp:${DAY_TIMESTAMP}`,
   },
 ];
 
@@ -108,8 +108,6 @@ const processAnswers = async (answers: { [key: string]: string }) => {
     fs.promises.readFile(solutionPath, "utf8"),
   ]);
 
-  console.log({ templatePath, targetPath });
-
   fs.mkdirSync(targetPath, { recursive: true });
   fs.writeFileSync(`${targetPath}/${destFile}.solution.ts`, solutionContent);
   fs.writeFileSync(`${targetPath}/${destFile}.note.md`, templateContent);
@@ -118,15 +116,3 @@ const processAnswers = async (answers: { [key: string]: string }) => {
 };
 
 executeCommands(0);
-
-// 웹 페이지의 타이틀을 가져오는 함수
-async function fetchWebTitle(url: string): Promise<string> {
-  try {
-    // const response = await axios.get(url);
-    const response = fetch(url).then((res) => res.text());
-    return response;
-  } catch (error) {
-    console.error("Error fetching web title:", error);
-    return "error";
-  }
-}
