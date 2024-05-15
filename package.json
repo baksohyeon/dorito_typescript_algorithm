@@ -4,9 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "start": "node ./bin/app.js",
     "dev": "ts-node ./src/app.ts && tsc --watch",
+    "submit": "ts-node ./src/util/fs.util.ts",
     "test": "jest"
   },
   "dependencies": {
