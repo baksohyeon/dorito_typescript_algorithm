@@ -1,31 +1,37 @@
-export const solution = (babbling: string[]) => {
-  const availableWords = ["aya", "ye", "woo", "ma"];
-  const set = new Set(availableWords);
+export const solution = (record: string[]) => {
+  // [enter leave change] uid nickname
+  // 모든 기록이 처리된 후, 최종적으로 방을 개설한 사람이 보게 되는 메시지
+  // 현재 방 uid -> name
+  const UserAction = {
+    Enter: "Enter",
+    Leave: "Leave",
+    Change: "Change", // only admin can see
+  } as const;
 
-  const regex = new RegExp(`(${availableWords.join("|")})`, "g");
+  const member = new Map<string, string>(); // uid, nickname
+  const memberLog: string[][] = []; // list of action, user
 
-  const wordList = babbling.map((word) => {
-    return word.split(regex).filter((elem) => elem !== "");
+  record.forEach((history) => {
+    const [action, uid, nickname] = history.split(" ");
+    if (nickname) {
+      member.set(uid, nickname);
+    }
+
+    if (action !== UserAction.Change) {
+      memberLog.push([action, uid]);
+    }
   });
 
-  return wordList.reduce((acc, cur) => {
-    const isRightComposedWord = cur.every((elem) => set.has(elem));
+  return memberLog.map((log) => {
+    const [action, uid] = log;
 
-    if (!isRightComposedWord) {
-      return acc;
+    const nickname = member.get(uid) ?? "";
+
+    if (action === UserAction.Enter) {
+      return `${nickname}님이 들어왔습니다.`;
     }
-
-    const continuousWordCount = cur.reduce((count, currentWord, index) => {
-      if (cur[index + 1] === currentWord) {
-        return count + 1;
-      }
-
-      return count;
-    }, 0);
-
-    if (continuousWordCount === 0) {
-      return acc + 1;
+    if (action === UserAction.Leave) {
+      return `${nickname}님이 나갔습니다.`;
     }
-    return acc;
-  }, 0);
+  });
 };
