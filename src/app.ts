@@ -1,37 +1,26 @@
-export const solution = (record: string[]) => {
-  // [enter leave change] uid nickname
-  // 모든 기록이 처리된 후, 최종적으로 방을 개설한 사람이 보게 되는 메시지
-  // 현재 방 uid -> name
-  const UserAction = {
-    Enter: "Enter",
-    Leave: "Leave",
-    Change: "Change", // only admin can see
-  } as const;
-
-  const member = new Map<string, string>(); // uid, nickname
-  const memberLog: string[][] = []; // list of action, user
-
-  record.forEach((history) => {
-    const [action, uid, nickname] = history.split(" ");
-    if (nickname) {
-      member.set(uid, nickname);
+export default function solution(
+  numer1: number,
+  denom1: number,
+  numer2: number,
+  denom2: number
+): [number, number] {
+  const numerator = numer1 * denom2 + numer2 * denom1;
+  const denominator = denom1 * denom2;
+  const range = Math.min(numerator, denominator);
+  // 최대 공약수 어캐 구하더라
+  let greatestCommonDenom = 1;
+  for (let i = 1; i <= range; i++) {
+    if (numerator % i === 0 && denominator % i === 0) {
+      greatestCommonDenom = i;
     }
+  }
 
-    if (action !== UserAction.Change) {
-      memberLog.push([action, uid]);
-    }
-  });
+  console.log({ greatestCommonDenom });
+  return [numerator / greatestCommonDenom, denominator / greatestCommonDenom];
+}
 
-  return memberLog.map((log) => {
-    const [action, uid] = log;
-
-    const nickname = member.get(uid) ?? "";
-
-    if (action === UserAction.Enter) {
-      return `${nickname}님이 들어왔습니다.`;
-    }
-    if (action === UserAction.Leave) {
-      return `${nickname}님이 나갔습니다.`;
-    }
-  });
-};
+// 1 2 5 10
+// 1 2 4 8
+// 10 8
+// 5 4
+// 최대 공약수 나눠야함
