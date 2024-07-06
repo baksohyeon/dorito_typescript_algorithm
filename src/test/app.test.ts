@@ -1,21 +1,26 @@
-import { solution } from "../app";
+import solution from "../app";
 
 describe("solution", () => {
   it("test 1", () => {
-    const record = [
-      "Enter uid1234 Muzi",
-      "Enter uid4567 Prodo",
-      "Leave uid1234",
-      "Enter uid1234 Prodo",
-      "Change uid4567 Ryan",
-    ];
-    const result = solution(record);
-    const expected = [
-      "Prodo님이 들어왔습니다.",
-      "Ryan님이 들어왔습니다.",
-      "Prodo님이 나갔습니다.",
-      "Prodo님이 들어왔습니다.",
-    ];
+    const result = solution(1, 2, 3, 4);
+    const expected = [5, 4];
+    expect(result).toEqual(expected);
+  });
+
+  it("test 2", () => {
+    const result = solution(2, 1, 2, 1);
+    const expected = [4, 1];
+    expect(result).toEqual(expected);
+  });
+
+  it("test 3", () => {
+    const result = solution(4, 4, 4, 4);
+    const expected = [2, 1];
+    expect(result).toEqual(expected);
+  });
+  it("test 4", () => {
+    const result = solution(1, 6, 2, 6);
+    const expected = [1, 2];
     expect(result).toEqual(expected);
   });
 });
