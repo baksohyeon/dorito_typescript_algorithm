@@ -301,3 +301,23 @@ describe("solution", () => {
     console.table(result);
   });
 });
+
+function findNextTime(startTime: number) {
+  const date = new Date(startTime);
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  // 55분 찾기
+  if (minutes < 55) {
+    // 현재 시간의 55분을 반환
+    date.setMinutes(55);
+  } else {
+    // 현재 시간의 다음 시간의 55분을 반환
+    hours += 1;
+    if (hours === 24) {
+      hours = 0; // 자정 넘어가면 0으로 리셋
+    }
+    date.setHours(hours);
+    date.setMinutes(55);
+  }
+  return date;
+}
