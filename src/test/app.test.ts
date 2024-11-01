@@ -7,7 +7,7 @@ const blindLevels = [
     Big: 100,
     PB: 0,
     Ante: 1,
-    Time: 360, // 6 min
+    Time: 10 * 60, // sec
     Index: -1,
   },
   {
@@ -16,7 +16,7 @@ const blindLevels = [
     Big: 200,
     PB: 0,
     Ante: 1,
-    Time: 360, // sec
+    Time: 10 * 60, // sec
     Index: 0,
   },
   {
@@ -25,7 +25,7 @@ const blindLevels = [
     Big: 5000,
     PB: 0,
     Ante: 1,
-    Time: 360,
+    Time: 5 * 60,
     Index: 2,
   },
   {
@@ -34,7 +34,7 @@ const blindLevels = [
     Big: 8000,
     PB: 0,
     Ante: 1,
-    Time: 360,
+    Time: 13 * 60,
     Index: 3,
   },
   {
@@ -294,30 +294,10 @@ const blindLevels = [
   },
 ];
 
-describe("solution", () => {
-  const now = new Date("2024-11-01T13:26:00Z").getTime();
-  it("test 1", () => {
-    const result = solution(blindLevels, new Date("2024-11-01T13:26:00Z"));
-    console.table(result);
-  });
-});
-
-function findNextTime(startTime: number) {
-  const date = new Date(startTime);
-  let hours = date.getHours();
-  let minutes = date.getMinutes();
-  // 55분 찾기
-  if (minutes < 55) {
-    // 현재 시간의 55분을 반환
-    date.setMinutes(55);
-  } else {
-    // 현재 시간의 다음 시간의 55분을 반환
-    hours += 1;
-    if (hours === 24) {
-      hours = 0; // 자정 넘어가면 0으로 리셋
-    }
-    date.setHours(hours);
-    date.setMinutes(55);
-  }
-  return date;
-}
+// describe("solution", () => {
+//   const now = new Date("2024-11-01T13:26:00Z").getTime();
+//   it("test 1", () => {
+//     const result = solution(blindLevels, new Date("2024-11-01T13:26:00Z"));
+//     console.table(result);
+//   });
+// });

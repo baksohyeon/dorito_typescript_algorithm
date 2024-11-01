@@ -9,7 +9,7 @@ interface IBlind {
 }
 
 interface TimeSegment {
-  type: "play" | "break" | "prepare";
+  type: "play" | "break";
   duration: number; // 해당 세그먼트의 시간
   originalLevel: number; // 원래 레벨
   level?: number; // only for play segments
@@ -18,19 +18,19 @@ interface TimeSegment {
   accumulatedTime?: number; // 누적 시간
   temp?: any;
 }
+
 export default function solution(
   levels: IBlind[],
   startTime: Date
 ): TimeSegment[] {
-  const PLAY_TIME_BEFORE_BREAK = 55 * 60; // 55분 후 휴식
-  const BREAK_DURATION = 5 * 60; // 5분 휴식
+  const PLAY_TIME_BEFORE_BREAK = 55; // 55분 후 휴식
 
   let result: TimeSegment[] = [];
   let currentTime = new Date(startTime);
   let accumulatedTime = 0;
 
   levels.forEach((duration, level) => {
-    let remainingDuration = duration.Time / 60; // 이미 분 단위
+    let remainingDuration = duration.Time / 60;
 
     while (remainingDuration > 0) {
       // 다음 정각까지 남은 시간 계산
@@ -42,6 +42,25 @@ export default function solution(
       // 현재 시점부터 다음 55분 지점까지의 시간 계산
       const timeToNext55 =
         PLAY_TIME_BEFORE_BREAK - (currentTime.getMinutes() % 60);
+
+      if (timeToNext55 <= 0) {
+        // 이미 55분이 지난 경우, 다음 정각까지 휴식
+        const breakStartTime = new Date(currentTime);
+        const breakEndTime = new Date(nextHourBreak);
+        const breakDuration =
+          (breakEndTime.getTime() - breakStartTime.getTime()) / 60000; // ms to min
+
+        result.push({
+          type: "break",
+          duration: breakDuration,
+          originalLevel: level + 1,
+          startTime: breakStartTime,
+          endTime: breakEndTime,
+        });
+
+        currentTime = breakEndTime;
+        continue;
+      }
 
       // 더 가까운 휴식 시간 선택
       const timeUntilBreak = Math.min(timeToNextHour, timeToNext55);
@@ -65,14 +84,16 @@ export default function solution(
         }
 
         // 55분부터 정각까지 휴식
-        const breakEndTime = new Date(currentTime);
-        breakEndTime.setMinutes(0);
-        breakEndTime.setHours(currentTime.getHours() + 1);
+        const breakStartTime = new Date(currentTime);
+        const breakEndTime = new Date(nextHourBreak);
+        const breakDuration =
+          (breakEndTime.getTime() - breakStartTime.getTime()) / 60000; // ms to min
+
         result.push({
           type: "break",
-          duration: (breakEndTime.getTime() - currentTime.getTime()) / 60000, // ms to min
+          duration: breakDuration,
           originalLevel: level + 1,
-          startTime: new Date(currentTime),
+          startTime: breakStartTime,
           endTime: breakEndTime,
         });
 
