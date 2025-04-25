@@ -25,7 +25,7 @@ link: https://school.programmers.co.kr/learn/courses/30/lessons/43165
 
 ### 구현 과정 요약
 
-1. 첫 번째 시도: `실패` (스택 터짐 ㄱ-)
+1. 첫 번째 시도:
 
    ```typescript
    export function solution(numbers: number[], target: number) {
@@ -96,7 +96,7 @@ link: https://school.programmers.co.kr/learn/courses/30/lessons/43165
      - 방문 체크 로직이 재귀 호출 전에 실행되어 일부 경로가 누락됨
      - 상태 복원이 종료 조건 이후에 실행되어 불필요한 상태 변경 발생
 
-2. 두 번째 시도: `통과` _but.... 최적화 & 리팩토링 필요!_
+2. 두 번째 시도:
 
    ```typescript
    function solution(numbers: number[], target: number) {
@@ -142,11 +142,9 @@ link: https://school.programmers.co.kr/learn/courses/30/lessons/43165
    }
    ```
 
-   <img width="986" alt="image" src="https://github.com/user-attachments/assets/8a2b4cb9-9e78-45aa-b692-22f21d498823" />
-
 ---
 
-### 최종 구현 코드: `통과 & 제출`
+### 최종 구현 코드:
 
 ```typescript
 export function solution(numbers: number[], target: number) {
@@ -168,14 +166,10 @@ export function solution(numbers: number[], target: number) {
 }
 ```
 
-<img width="995" alt="image" src="https://github.com/user-attachments/assets/11eefee3-484e-46b1-a5a1-233812df66df" />
-
----
-
 - 어려웠던 점
   - 재귀 함수의 종료 조건을 잘못 설정하여 무한 재귀 발생
   - 불필요한 방문 체크로 인한 코드 복잡성 증가
-  - 결과값 누적 방식의 오류 (재귀 함수에서 매개변수 처리랑 변수 메모리 값 할당이 어떻게 되는지..올만에 다시 푸니까 하나도 기억 안나네요. 다시 초심으로 돌아가겟습니다.)
+  - 결과값 누적 방식의 오류
 
 ## 코드 리뷰 및 개선
 
@@ -204,11 +198,7 @@ export function solution(numbers: number[], target: number) {
 
 - 배운 점
 
-  1. 재귀 함수의 base condition, recursive 조건 확실하게 잡고가야.
-  2. 재귀 함수의 매개변수는 필요한 것만 전달해서 최적화 하기
-
----
-
-```text
- 재귀함수 정복 한번더 드갑니다.  다시푸니까 까묵음. (경로 찾기 문제도..)
-```
+  1. DFS 구현 시 불필요한 상태 관리 피하기 (특히 전역 변수 사용 피하기)
+  2. 재귀 함수의 종료 조건 확실하게 잡고가자.
+  3. 문제의 요구사항을 정확히 파악하고 필요한 로직만 구현
+  4. 재귀 함수의 매개변수는 필요한 것만 전달해서 최적화하기
