@@ -1,6 +1,12 @@
 export const solution = (maps: number[][]) => {
+    // If the start is a wall, early-exit.
+    if (maps[0][0] === 0) return -1;
+
     const queue = [{ x: 0, y: 0, count: 1 }];
-    const visited = Array.from(Array(maps.length), () => Array(maps[0].length).fill(false));
+    const visited = Array.from({ length: maps.length }, () =>
+        Array(maps[0].length).fill(false),
+    );
+    visited[0][0] = true;
     const dx = [0, 1, 0, -1];
     const dy = [1, 0, -1, 0];
     while (queue.length) {
