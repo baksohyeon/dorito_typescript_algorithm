@@ -12,12 +12,7 @@ export const solution = (maps: number[][]) => {
     while (queue.length) {
 
 
-        const shifted = queue.shift();
-
-        if (typeof shifted === 'undefined') {
-            return 0
-        }
-
+        const shifted = queue.shift()!; // non-null assertion – safe after length check
         const { x, y, count } = shifted
 
 
