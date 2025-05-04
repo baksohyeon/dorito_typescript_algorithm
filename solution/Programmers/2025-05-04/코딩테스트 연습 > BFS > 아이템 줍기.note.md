@@ -1,6 +1,7 @@
 # 알고리즘 문제 해결
 
 link: https://school.programmers.co.kr/learn/courses/30/lessons/87694
+PR: https://github.com/baksohyeon/dorito_algorithm/pull/10
 
 ## 문제 이해
 
